@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  app:
+    container_name: sentimentgpt
+    image: timothymugayi/sentimentgpt
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - BUILD_DATE=${BUILD_DATE}
+        - BUILD_VERSION=${BUILD_VERSION}
+        - BUILD_NUMBER=${BUILD_NUMBER}
+        - GIT_COMMIT=${GIT_COMMIT}
+        - BUILD_AUTHORS=${BUILD_AUTHORS}
+        - JENKINS_URL=${JENKINS_URL}
+        - COMPOSE=${COMPOSE}
+        - K8SYML=${K8SYML}
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    ports:
+      - '8000:8000'
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
+    networks:
+      - sentiment-network
+
+networks:
+  sentiment-network:
